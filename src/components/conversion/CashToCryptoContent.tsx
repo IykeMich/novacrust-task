@@ -36,6 +36,10 @@ export const CashToCryptoContent = ({ title, description }: CashToCryptoContentP
     await formik.submitForm();
   };
 
+  const isFormComplete = () => {
+    return formik.values.email && formik.values.email.trim() !== "" && formik.isValid;
+  };
+
   return (
     <div className="flex flex-col items-center justify-center py-8 px-6">
       <h2 className="text-[24px] lg:text-[32px] font-medium font-family-display! text-[#013941] mb-4 text-center">
@@ -67,7 +71,7 @@ export const CashToCryptoContent = ({ title, description }: CashToCryptoContentP
           label="Update me"
           loading={isSubmitting}
           loadingText="Submitting..."
-          disabled={!formik.isValid || isSubmitting}
+          disabled={!isFormComplete() || isSubmitting}
           extraClassName="bg-[#013941] hover:bg-[#013941]/90 text-white rounded-full py-6 mt-6"
         />
       </form>

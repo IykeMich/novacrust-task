@@ -21,6 +21,22 @@ export const ConversionForm = ({
   isSubmitting,
   handleAmountChange,
 }: ConversionFormProps) => {
+  const isFormComplete = () => {
+    const youPayAmount = parseFloat(formik.values.youPay?.replace(/,/g, "") || "0");
+    const youReceiveAmount = parseFloat(formik.values.youReceive?.replace(/,/g, "") || "0");
+    
+    return (
+      formik.values.youPay &&
+      formik.values.youPayCurrency &&
+      youPayAmount > 0 &&
+      formik.values.youReceive &&
+      formik.values.youReceiveCurrency &&
+      youReceiveAmount > 0 &&
+      formik.values.payFrom &&
+      formik.values.payTo
+    );
+  };
+
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
       <CryptoCurrencyInput
@@ -65,7 +81,7 @@ export const ConversionForm = ({
           label="Convert now"
           loading={isSubmitting}
           loadingText="Converting..."
-          disabled={!formik.isValid || isSubmitting}
+          disabled={!isFormComplete() || isSubmitting}
           extraClassName="rounded-lg bg-[#0D9488] hover:bg-[#0b7d72]"
         />
       </div>

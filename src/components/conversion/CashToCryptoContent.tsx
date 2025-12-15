@@ -18,7 +18,7 @@ export const CashToCryptoContent = ({ title, description }: CashToCryptoContentP
   const formik = useFormik<EmailFormValues>({
     initialValues: { email: "" },
     validationSchema: emailValidationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async () => {
       setIsSubmitting(true);
       try {
         await new Promise((resolve) => setTimeout(resolve, 1000));

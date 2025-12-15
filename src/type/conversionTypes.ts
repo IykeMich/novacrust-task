@@ -22,12 +22,14 @@ export interface ConversionFormValues {
   youReceiveCurrency: string;
   payFrom: string;
   payTo: string;
+  [key: string]: unknown;
 }
 
 export interface EmailFormValues {
   email: string;
+  [key: string]: unknown;
 }
 
 export type ConversionFormikProps = FormikProps<ConversionFormValues>;
-export type FormikPropsGeneric<T = Record<string, unknown>> = FormikProps<T>;
+export type FormikPropsGeneric<T = any> = FormikProps<T>;
 

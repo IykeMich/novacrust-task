@@ -42,7 +42,7 @@ export const DefaultInput = ({
 
     const resolvedOnChange = formik?.handleChange ?? onChange
     const resolvedOnBlur = formik?.handleBlur ?? onBlur
-    const resolvedValue = formik ? formik?.values?.[name ?? ""] : value
+    const resolvedValue = formik ? (formik?.values?.[name ?? ""] as string | number | readonly string[] | undefined | null) ?? undefined : value
 
     const rightPadding = shouldShowEyeIcon ? 8 : (rightIcon ? rightIconSpace : 0)
 
@@ -63,7 +63,7 @@ export const DefaultInput = ({
                   type={security}
                   onChange={resolvedOnChange}
                   onBlur={resolvedOnBlur}
-                  {...(resolvedValue !== undefined ? {value: resolvedValue} : {})}
+                  {...(resolvedValue !== undefined && resolvedValue !== null ? {value: resolvedValue} : {})}
                   className={`${leftIcon ? `pl-${leftIconSpace}` : ''} ${rightPadding ? `pr-${rightPadding}` : ''} ${className ?? ''} 
                   border-[#D4D4D4] rounded-full h-[44px]
                   focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#678346]`}
@@ -91,7 +91,12 @@ export const DefaultInput = ({
                   )
               }
           </div>
-          <p className={'text-red-500! text-[12px] '}>{isError ? formik?.errors?.[name ?? ""] : ''}</p>
+          <p className={'text-red-500! text-[12px] '}>{isError ? (() => {
+            const error = formik?.errors?.[name ?? ""];
+            if (typeof error === 'string') return error;
+            if (Array.isArray(error)) return error.join(', ');
+            return '';
+          })() : ''}</p>
       </div>
   )
 };

@@ -53,8 +53,8 @@ export const CryptoCurrencyInput = ({
   const isError = formik?.touched?.[name ?? ""] && formik?.errors?.[name ?? ""];
   const isCurrencyError = formik?.touched?.[currencyName ?? ""] && formik?.errors?.[currencyName ?? ""];
 
-  const resolvedValue = formik ? formik?.values?.[name ?? ""] : value;
-  const resolvedCurrencyValue = formik ? formik?.values?.[currencyName ?? ""] : currencyValue;
+  const resolvedValue = formik ? (formik?.values?.[name ?? ""] as string | undefined) ?? "" : (value ?? "");
+  const resolvedCurrencyValue = formik ? (formik?.values?.[currencyName ?? ""] as string | undefined) : currencyValue;
 
   const resolvedOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -112,7 +112,7 @@ export const CryptoCurrencyInput = ({
             inputMode="decimal"
             onChange={resolvedOnChange}
             onBlur={formik?.handleBlur}
-            value={resolvedValue || ""}
+            value={resolvedValue}
             placeholder={placeholder}
             className={cn(
               "border-0 rounded-none h-[60px] pr-2 flex-1 text-xl! font-semibold! text-[#000E10]! bg-transparent! shadow-none!",
@@ -124,7 +124,7 @@ export const CryptoCurrencyInput = ({
           />
         <div className="flex items-center h-full pr-2">
           <Select
-            value={resolvedCurrencyValue}
+            value={resolvedCurrencyValue ?? ""}
             onValueChange={resolvedOnCurrencyChange}
             open={isOpen}
             onOpenChange={(open) => {
@@ -213,7 +213,12 @@ export const CryptoCurrencyInput = ({
         </div>
       </div>
       <p className={"text-[#525252] text-[12px]"}>
-        {isError ? formik?.errors?.[name ?? ""] : ""}
+        {isError ? (() => {
+          const error = formik?.errors?.[name ?? ""];
+          if (typeof error === 'string') return error;
+          if (Array.isArray(error)) return error.join(', ');
+          return '';
+        })() : ""}
       </p>
     </div>
   );
